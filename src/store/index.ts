@@ -99,12 +99,11 @@ export default new Vuex.Store({
     },
 
     actionList: ({ history }) => (type: HistoryModes) => {
-      const actionTypes = {
+      const action = {
         [HistoryModes.ALL]: undefined,
         [HistoryModes.SELECTED]: Actions.SELECT,
         [HistoryModes.UNSELECTED]: Actions.UNSELECT,
-      };
-      const action = actionTypes[type];
+      }[type];
 
       return action !== undefined
         ? history.filter(item => item.action === action)
