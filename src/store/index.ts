@@ -5,6 +5,8 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+const DATA_URL = 'https://next.json-generator.com/api/json/get/EkBoWek3K';
+
 export default new Vuex.Store({
   state: {
     list: [] as Item[],
@@ -49,10 +51,12 @@ export default new Vuex.Store({
 
   actions: {
     async loadData({ commit }) {
-      const { data } = await Axios.get(
-        'https://next.json-generator.com/api/json/get/EkBoWek3K'
-      );
-      commit('setData', data);
+      try {
+        const { data } = await Axios.get(DATA_URL);
+        commit('setData', data);
+      } catch (e) {
+        console.log(e);
+      }
     },
     select({ state, commit }, itemId: string) {
       const itemIndex = state.list.findIndex(item => item.id === itemId);
@@ -74,27 +78,28 @@ export default new Vuex.Store({
   },
 
   getters: {
-    filtered({ list, filter }) {
+    filteredList({ list, filter }) {
       const re = new RegExp(`${filter}{1}`, 'gi');
-      const result: { item: Item; amount: number }[] = [];
+      const resultList: { item: Item; count: number }[] = [];
 
       list.forEach(item => {
-        const res = {
+        const searchCounter = {
           item,
-          amount: 0,
+          count: 0,
         };
-        res.amount += Array.from(item.name.matchAll(re)).length;
+
+        searchCounter.count += Array.from(item.name.matchAll(re)).length;
         item.items.forEach(subitem => {
-          res.amount += Array.from(subitem.name.matchAll(re)).length;
+          searchCounter.count += Array.from(subitem.name.matchAll(re)).length;
         });
 
-        if (res.amount) {
-          result.push(res);
+        if (searchCounter.count) {
+          resultList.push(searchCounter);
         }
       });
 
-      return result
-        .sort((a, b) => (a.amount < b.amount ? 1 : -1))
+      return resultList
+        .sort((a, b) => (a.count < b.count ? 1 : -1))
         .map(item => item.item);
     },
 

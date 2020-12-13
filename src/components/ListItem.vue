@@ -6,7 +6,7 @@
         <span class="is-size-5">{{ props.actionLabel }}</span>
       </button>
     </div>
-    <div class="subitem">
+    <div v-if="props.item.items" class="subitem">
       <list-item
         v-for="subitem in props.item.items"
         :key="subitem.id"

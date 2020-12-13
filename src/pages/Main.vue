@@ -14,7 +14,7 @@
           </div>
         </div>
         <list
-          :list="filter ? filtered : list"
+          :list="filter ? filteredList : list"
           :action-label="'+'"
           @action="select"
         />
@@ -42,7 +42,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
   components: { List },
   computed: {
     ...mapState(['list', 'selected']),
-    ...mapGetters(['filtered']),
+    ...mapGetters(['filteredList']),
   },
   methods: mapActions(['select', 'unselect']),
 })
