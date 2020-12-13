@@ -5,11 +5,11 @@
       >История</router-link
     >
     |
-    <router-link :to="{ name: 'history', params: { type: 'add' } }">
+    <router-link :to="{ name: 'history', params: { type: 'selected' } }">
       История добавлений
     </router-link>
     |
-    <router-link :to="{ name: 'history', params: { type: 'remove' } }">
+    <router-link :to="{ name: 'history', params: { type: 'unselected' } }">
       История удалений
     </router-link>
   </div>

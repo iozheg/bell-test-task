@@ -1,4 +1,4 @@
-import { Item, HistoryItem, Actions } from '@/types';
+import { Item, HistoryItem, Actions, HistoryModes } from '@/types';
 import Axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -12,6 +12,7 @@ export default new Vuex.Store({
     filter: '',
     history: [] as HistoryItem[],
   },
+
   mutations: {
     setData(state, data: Item[]) {
       state.list = data;
@@ -45,6 +46,7 @@ export default new Vuex.Store({
       });
     },
   },
+
   actions: {
     async loadData({ commit }) {
       const { data } = await Axios.get(
@@ -70,6 +72,7 @@ export default new Vuex.Store({
       }
     },
   },
+
   getters: {
     filtered({ list, filter }) {
       const re = new RegExp(`${filter}{1}`, 'gi');
@@ -93,6 +96,19 @@ export default new Vuex.Store({
       return result
         .sort((a, b) => (a.amount < b.amount ? 1 : -1))
         .map(item => item.item);
+    },
+
+    actionList: ({ history }) => (type: HistoryModes) => {
+      const actionTypes = {
+        [HistoryModes.ALL]: undefined,
+        [HistoryModes.SELECTED]: Actions.SELECT,
+        [HistoryModes.UNSELECTED]: Actions.UNSELECT,
+      };
+      const action = actionTypes[type];
+
+      return action !== undefined
+        ? history.filter(item => item.action === action)
+        : history;
     },
   },
 });

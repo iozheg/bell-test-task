@@ -14,3 +14,9 @@ export interface HistoryItem {
   datetime: string;
   action: Actions;
 }
+
+export enum HistoryModes {
+  ALL = 'all',
+  SELECTED = 'selected',
+  UNSELECTED = 'unselected',
+}

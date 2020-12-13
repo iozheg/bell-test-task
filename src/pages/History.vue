@@ -1,29 +1,26 @@
 <template>
   <div class="container">
     <div class="columns">
-      History {{ type }}
-      <!-- <div class="column">
-        Total
-        <div class="field">
-          <div class="control">
-            <input
-              v-model="filter"
-              class="input"
-              type="text"
-              placeholder="Filter"
-            />
-          </div>
-        </div>
-        <list
-          :list="filter ? filtered : list"
-          :action-label="'+'"
-          @action="select"
-        />
-      </div> -->
-      <!-- <div class="column">
-        Selected
-        <list :list="selected" :action-label="'-'" @action="unselect" />
-      </div> -->
+      <div class="column">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Action</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in list" :key="`${item.id} - ${index}`">
+              <td>{{ item.id }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ actionType(item.action) }}</td>
+              <td>{{ item.datetime }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -31,37 +28,30 @@
 <script lang="ts">
 import 'bulma/css/bulma.css';
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import Navigation from '@/components/Navigation.vue';
 import List from '@/components/List.vue';
+import { Actions, HistoryItem, HistoryModes } from '@/types';
 
 @Component({
   components: { Navigation, List },
   computed: {
-    ...mapState(['list', 'selected']),
-    ...mapGetters(['filtered']),
+    ...mapGetters(['actionList']),
   },
-  methods: mapMutations(['select', 'unselect']),
 })
 export default class History extends Vue {
-  @Prop({ default: '' }) readonly type!: string;
+  @Prop({ default: '' }) readonly type!: HistoryModes;
+
+  actionList!: (type: string) => HistoryItem[];
+  get list() {
+    return this.actionList(this.type);
+  }
+
+  actionType(type: Actions) {
+    return {
+      [Actions.SELECT]: 'Selected',
+      [Actions.UNSELECT]: 'Unselected',
+    }[type];
+  }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
