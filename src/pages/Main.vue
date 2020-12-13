@@ -3,7 +3,21 @@
     <div class="columns">
       <div class="column">
         Total
-        <list :list="list" :action-label="'+'" @action="select" />
+        <div class="field">
+          <div class="control">
+            <input
+              v-model="filter"
+              class="input"
+              type="text"
+              placeholder="Filter"
+            />
+          </div>
+        </div>
+        <list
+          :list="filter ? filtered : list"
+          :action-label="'+'"
+          @action="select"
+        />
       </div>
       <div class="column">
         Selected
@@ -17,14 +31,24 @@
 import 'bulma/css/bulma.css';
 import { Component, Vue } from 'vue-property-decorator';
 import List from '@/components/List.vue';
-import { mapMutations, mapState } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 @Component({
   components: { List },
-  computed: mapState(['list', 'selected']),
+  computed: {
+    ...mapState(['list', 'selected']),
+    ...mapGetters(['filtered']),
+  },
   methods: mapMutations(['select', 'unselect']),
 })
-export default class Main extends Vue {}
+export default class Main extends Vue {
+  get filter(): string {
+    return this.$store.state.filter;
+  }
+  set filter(value: string) {
+    this.$store.commit('setFilter', value);
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

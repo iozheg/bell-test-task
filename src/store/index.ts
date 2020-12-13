@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     list: [] as Item[],
     selected: [] as Item[],
+    filter: '',
   },
   mutations: {
     setData(state, data: Item[]) {
@@ -28,6 +29,9 @@ export default new Vuex.Store({
         state.selected.splice(itemIndex, 1);
       }
     },
+    setFilter(state, value: string) {
+      state.filter = value;
+    },
   },
   actions: {
     async loadData({ commit }) {
@@ -37,5 +41,29 @@ export default new Vuex.Store({
       commit('setData', data);
     },
   },
-  modules: {},
+  getters: {
+    filtered({ list, filter }) {
+      const re = new RegExp(`${filter}{1}`, 'gi');
+      const result: { item: Item; amount: number }[] = [];
+
+      list.forEach(item => {
+        const res = {
+          item,
+          amount: 0,
+        };
+        res.amount += Array.from(item.name.matchAll(re)).length;
+        item.items.forEach(subitem => {
+          res.amount += Array.from(subitem.name.matchAll(re)).length;
+        });
+
+        if (res.amount) {
+          result.push(res);
+        }
+      });
+
+      return result
+        .sort((a, b) => (a.amount < b.amount ? 1 : -1))
+        .map(item => item.item);
+    },
+  },
 });
