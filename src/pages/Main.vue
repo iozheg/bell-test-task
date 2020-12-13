@@ -1,13 +1,18 @@
 <template>
-  <div>
-    <!-- <div v-for="item in list" :key="item.id">
-      {{ item.id }} - {{ item.name }}
-    </div> -->
-    <list :list="list" />
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <list :list="list" />
+      </div>
+      <div class="column">
+        <list :list="list" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+import 'bulma/css/bulma.css';
 import { Component, Vue } from 'vue-property-decorator';
 import List from '@/components/List.vue';
 
