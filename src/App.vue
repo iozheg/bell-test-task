@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Main</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <navigation />
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import Navigation from '@/components/Navigation.vue';
 
-@Component
+@Component({
+  components: { Navigation },
+})
 export default class App extends Vue {
   created() {
     this.$store.dispatch('loadData');
