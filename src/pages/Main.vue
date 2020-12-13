@@ -31,7 +31,7 @@
 import 'bulma/css/bulma.css';
 import { Component, Vue } from 'vue-property-decorator';
 import List from '@/components/List.vue';
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 @Component({
   components: { List },
@@ -39,7 +39,7 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
     ...mapState(['list', 'selected']),
     ...mapGetters(['filtered']),
   },
-  methods: mapMutations(['select', 'unselect']),
+  methods: mapActions(['select', 'unselect']),
 })
 export default class Main extends Vue {
   get filter(): string {

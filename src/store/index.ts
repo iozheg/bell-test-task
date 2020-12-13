@@ -1,4 +1,4 @@
-import { Item } from '@/types';
+import { Item, HistoryItem, Actions } from '@/types';
 import Axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -10,27 +10,39 @@ export default new Vuex.Store({
     list: [] as Item[],
     selected: [] as Item[],
     filter: '',
+    history: [] as HistoryItem[],
   },
   mutations: {
     setData(state, data: Item[]) {
       state.list = data;
     },
-    select(state, itemId: string) {
-      const itemIndex = state.list.findIndex(item => item.id === itemId);
-      if (itemIndex >= 0) {
-        state.selected.push(state.list[itemIndex]);
-        state.list.splice(itemIndex, 1);
-      }
+    select(state, index: number) {
+      state.selected.push(state.list[index]);
+      state.list.splice(index, 1);
     },
-    unselect(state, itemId: string) {
-      const itemIndex = state.selected.findIndex(item => item.id === itemId);
-      if (itemIndex >= 0) {
-        state.list.push(state.selected[itemIndex]);
-        state.selected.splice(itemIndex, 1);
-      }
+    unselect(state, index: number) {
+      state.list.push(state.selected[index]);
+      state.selected.splice(index, 1);
     },
     setFilter(state, value: string) {
       state.filter = value;
+    },
+    addHistoryItem(
+      state,
+      { index, action }: { index: number; action: Actions }
+    ) {
+      const sources = {
+        [Actions.SELECT]: state.list,
+        [Actions.UNSELECT]: state.selected,
+      };
+      const { id, name } = sources[action][index];
+
+      state.history.push({
+        id,
+        name,
+        action,
+        datetime: new Date().toLocaleString(),
+      });
     },
   },
   actions: {
@@ -39,6 +51,23 @@ export default new Vuex.Store({
         'https://next.json-generator.com/api/json/get/EkBoWek3K'
       );
       commit('setData', data);
+    },
+    select({ state, commit }, itemId: string) {
+      const itemIndex = state.list.findIndex(item => item.id === itemId);
+      if (itemIndex >= 0) {
+        commit('addHistoryItem', { index: itemIndex, action: Actions.SELECT });
+        commit('select', itemIndex);
+      }
+    },
+    unselect({ state, commit }, itemId: string) {
+      const itemIndex = state.selected.findIndex(item => item.id === itemId);
+      if (itemIndex >= 0) {
+        commit('addHistoryItem', {
+          index: itemIndex,
+          action: Actions.UNSELECT,
+        });
+        commit('unselect', itemIndex);
+      }
     },
   },
   getters: {
