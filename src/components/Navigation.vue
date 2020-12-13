@@ -1,16 +1,16 @@
 <template functional>
   <div id="nav">
-    <router-link :to="{ name: 'main' }">Главная</router-link> |
+    <router-link :to="{ name: 'main' }">Main</router-link> |
     <router-link :to="{ name: 'history', params: { type: 'all' } }"
-      >История</router-link
+      >History</router-link
     >
     |
     <router-link :to="{ name: 'history', params: { type: 'selected' } }">
-      История добавлений
+      History (selected)
     </router-link>
     |
     <router-link :to="{ name: 'history', params: { type: 'unselected' } }">
-      История удалений
+      History (unselected)
     </router-link>
   </div>
 </template>
