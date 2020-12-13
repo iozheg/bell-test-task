@@ -21,7 +21,12 @@
       </div>
       <div class="column">
         Selected
-        <list :list="selected" :action-label="'-'" @action="unselect" />
+        <list
+          :list="selected"
+          :action-label="'-'"
+          class="selected-list"
+          @action="unselect"
+        />
       </div>
     </div>
   </div>
@@ -50,3 +55,9 @@ export default class Main extends Vue {
   }
 }
 </script>
+
+<style>
+.selected-list {
+  margin-top: 52px;
+}
+</style>
