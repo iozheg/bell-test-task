@@ -2,7 +2,9 @@
   <div>
     <div class="panel-block list-item">
       {{ props.item.id }} - {{ props.item.name }}
-      <div class="action-button" v-on="listeners">+</div>
+      <div v-if="props.actionLabel" class="action-button" v-on="listeners">
+        {{ props.actionLabel }}
+      </div>
     </div>
     <div class="subitem">
       <list-item

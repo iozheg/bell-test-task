@@ -4,14 +4,15 @@
       v-for="item in list"
       :key="item.id"
       :item="item"
-      @click="move(item.id)"
+      :action-label="actionLabel"
+      @click="action(item.id)"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { Item } from '@/types';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import ListItem from '@/components/ListItem.vue';
 
 @Component({
@@ -19,9 +20,11 @@ import ListItem from '@/components/ListItem.vue';
 })
 export default class List extends Vue {
   @Prop({ default: [] }) readonly list!: Item[];
+  @Prop({ default: '' }) readonly actionLabel!: string;
 
-  move(id: string) {
-    console.log(id, 'moved');
+  @Emit()
+  action(id: string) {
+    return id;
   }
 }
 </script>
